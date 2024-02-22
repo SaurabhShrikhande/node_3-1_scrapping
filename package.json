@@ -1,0 +1,20 @@
+{
+  "name": "scrap",
+  "version": "1.0.0",
+  "description": "scraping e-commer website",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "scrap"
+  ],
+  "author": "saurabh shrikhande",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "cheerio": "^1.0.0-rc.12",
+    "xlsx": "^0.18.5"
+  }
+}
