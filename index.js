@@ -3,60 +3,49 @@ const cheerio = require('cheerio');
 const xlsx = require('xlsx');
 
 const arr = [];
-arr.push(["Name" , "Price" , "Ratings"])
+arr.push(["Job Title" , "Company name" , "Location", "Salary", "Posted Date"])
 
 
 const scrap = () => {
- axios.get('https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=mobile&_sacat=0')
+ axios.get('https://www.linkedin.com/jobs/search?keywords=tech%20job&location=United%20States&geoId=103644278&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0')
   .then(response => {
    // console.log('Data:', response.data); // Access the response data
 
 
     const html = response.data;
+   // console.log(html)
     const $ = cheerio.load(html); 
-    // console.log($);
-    
-    // $('[role="heading"]').each((index, element) => {
-    //     const paragraphText = $(element).text();
-    //     console.log(paragraphText); 
-    //     console.log(paragraphText.length)
-    //     console.log(typeof(paragraphText))
-    
-    //   });
-
-    //   $('.s-item__price').each((index, element) => {
-    //     const paragraphText = $(element).text();
-    //     console.log(paragraphText); 
-    //     console.log(paragraphText.length)
-    //     console.log(typeof(paragraphText))
-        
-    //   });
+   //  console.log($);
+  
 
     const card = $('li');
-   // console.log(card , card.length, typeof(card));
+  // console.log(card , card.length, typeof(card));
     
    card.each((idx, ele) => {
        const container = $(ele);
-      
-       const head = container.find('[role="heading"]').text();
-       const price = container.find('.s-item__price').text();
-      const rataing = container.find('[aria-hidden="false"]').text();
-    //    console.log(rataing);
- 
-   console.log(head, price , rataing)
-    
-   if (head !== '' && price !== '' && rataing !== ''){
-       arr.push([head , price , rataing])
-   }
- //  console.log(arr[arr.length  -1 ])
+     //  console.log(container);
+       const jobtitle = container.find('.base-search-card__title').text();
+        const company = container.find('.hidden-nested-link').text();
+       const location = container.find('.job-search-card__location').text()
+       const salary = container.find('.job-search-card__salary-info').text()
+       const posteddate = container.find('.job-search-card__listdate').text()
 
-  if(idx === card.length - 1) {
-      // Create a new workbook
+  console.log(jobtitle)
+    
+
+
+    if (jobtitle !== '' && company !== '' && posteddate !== ''){
+      arr.push([jobtitle , company, location, salary , posteddate])
+  }
+//  console.log(arr[arr.length  -1 ])
+
+ if(idx === card.length - 1) {
+     // Create a new workbook
 const workbook = xlsx.utils.book_new();
 
 // Create a new sheet
 const sheetData = arr;
-                      //array of array
+                     //array of array
 const sheet = xlsx.utils.aoa_to_sheet(sheetData);
 
 // Append the sheet to the workbook
@@ -67,7 +56,9 @@ xlsx.writeFile(workbook, 'output.xlsx');
 
 console.log('XLSX file created successfully!');
 
-  }
+
+ }
+
   
    })
     
